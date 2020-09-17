@@ -118,40 +118,23 @@ class Main(QWidget):
                 self.start_time = now.strftime("%H:%M:%S")
                 self.start_date = date.today()
                 self.start_date = self.start_date.strftime("%d/%m/%Y")
-                self.timer1 = QTimer()
-                self.timer1.setInterval(60000)
-                self.timer1.start()
-                self.timer1.timeout.connect(self.addmin)
-                self.min=0
+                self.timer2 = QTimer()
+                self.timer2.setInterval(60000)
+                self.timer2.start()
+                self.timer2.timeout.connect(self.addmin)
+                self.mins=0
                 self.hours=0
                 data.start=1
     def addmin(self):
-        self.min=self.min+1
-        if self.min==60:
-            self.min=0
+        self.mins=self.mins+1
+        if self.mins==60:
+            self.mins=0
             self.hours=self.hours+1
     def stop(self):
         if data.start==1:
-            now = datetime.now()
-            self.end_time = now.strftime("%H:%M:%S")
-            self.end_date = date.today()
-            self.end_date = self.end_date.strftime("%d/%m/%Y")
-            self.end_time = self.end_time.split(':')
-            self.start_time = self.start_time.split(':')
-            if self.end_date==self.start_date:
-                hours=int(self.end_time[0])-int(self.start_time[0])
-                if int(self.end_time[1])>=int(self.start_time[1]):
-                    mins=int(self.end_time[1])-int(self.start_time[1])
-                else:
-                    mins=int(self.end_time[1])+60-int(self.start_time[1])
-            else:
-                hours=int(self.end_time[0])+24-int(self.start_time[0])
-                if int(self.end_time[1])>=int(self.start_time[1]):
-                    mins=int(self.end_time[1])-int(self.start_time[1])
-                else:
-                    mins=int(self.end_time[1])+60-int(self.start_time[1])
+            self.timer2.stop()
             data.start=0
-            QMessageBox.information(self, "Info", "You have worked for {} hours and {} minutes".format(hours, mins))
+            QMessageBox.information(self, "Info", "You have worked for {} hours and {} minutes".format(self.hours, self.mins))
             query = "SELECT Date_Time FROM project WHERE Name=?"
             projects = cur.execute(query, (data.data_name,)).fetchone()
             projects = projects[0].split(',')
@@ -163,10 +146,10 @@ class Main(QWidget):
                 item = item.split(':')
                 if data.start_item == item[0]:
                     item[1]=item[1].split('-')
-                    item[1][0]=item[1][0]+" "+self.start_date+" "+str(hours)+"."+str(mins)
+                    item[1][0]=item[1][0]+" "+self.start_date+" "+str(self.hours)+"."+str(self.mins)
                     item[1][1]=item[1][1].split('.')
-                    hours=int(item[1][1][0])+hours
-                    mins=int(item[1][1][1])+mins
+                    hours=int(item[1][1][0])+self.hours
+                    mins=int(item[1][1][1])+self.mins
                     while mins>60:
                         hours=hours+1
                         mins=mins-60

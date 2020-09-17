@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['Main.py'],
-             pathex=['C:\\Users\\sanja\\PycharmProjects\\work_tracker'],
+             pathex=['C:\\Users\\sanja\\Documents\\GitHub\\work-tracker'],
              binaries=[],
              datas=[],
              hiddenimports=['pkg_resources.py2_warn'],
